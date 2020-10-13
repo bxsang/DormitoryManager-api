@@ -58,6 +58,29 @@ class Student(Resource):
         student_schema = db.StudentSchema()
         return student_schema.dump(student)
     
+    def post(self, student_id):
+        try:
+            data = request.get_json()
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        try_student = db.Student.query \
+            .filter(db.Student.id == student_id) \
+            .one_or_none()
+        if try_student is not None:
+            return {
+                'success': False,
+                'message': 'Sinh viên đã tồn tại'
+            }
+        student = db.Student(student_id, data['name'], data['password'], data['hometown'], data['nationality'], data['faculty'])
+        return {
+            'success': utils.db_insert([student])
+        }
+    
     def put(self, student_id):
         try:
             data = request.get_json()
