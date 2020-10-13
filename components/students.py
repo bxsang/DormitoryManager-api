@@ -20,6 +20,7 @@ class Students(Resource):
         return students_schema.dump(students)
     
     def post(self):
+        default_password = 'p@ssw0rd'
         try:
             data = request.get_json()
             jwt = utils.get_jwt()
@@ -29,17 +30,16 @@ class Students(Resource):
         required_roles = ['manager', 'admin']
         if role not in required_roles:
             return utils.return_unauthorized()
-        try_student = db.Student.query \
-            .filter(db.Student.id == data['id']) \
-            .one_or_none()
-        if try_student is not None:
-            return {
-                'success': False,
-                'message': 'Sinh viên đã tồn tại'
-            }
-        student = db.Student(data['id'], data['name'], data['password'], data['hometown'], data['nationality'], data['faculty'])
+        students_to_add = []
+        for student in data:
+            try_student = db.Student.query \
+                .filter(db.Student.id == student['id']) \
+                .one_or_none()
+            if try_student is not None:
+                continue
+            students_to_add.append(db.Student(student['id'], student['name'], default_password, student['hometown'], student['nationality'], student['faculty']))
         return {
-            'success': utils.db_insert([student])
+            'success': utils.db_insert(students_to_add)
         }
 
 class Student(Resource):
