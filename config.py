@@ -28,7 +28,7 @@ DB_NAME = os.getenv("DB_NAME")
 USER = os.getenv("DB_USER")
 PASS = os.getenv("DB_PASS")
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://"+USER+":"+PASS+"@"+SERVER+"/"+DB_NAME
-db = SQLAlchemy(app)
+sql = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
 limiter = Limiter(app, key_func=get_remote_address)

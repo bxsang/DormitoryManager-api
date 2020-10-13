@@ -1,15 +1,15 @@
 import hashlib
-from config import db, ma
+from config import sql, ma
 
-class Manager(db.Model):
+class Manager(sql.Model):
     __tablename__ = 'Employees'
-    id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-    name = db.Column(db.String)
-    email = db.Column(db.String)
-    username = db.Column(db.String)
-    password = db.Column(db.String)
-    role = db.Column(db.String)
-    created_date = db.Column(db.TIMESTAMP)
+    id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
+    name = sql.Column(sql.String)
+    email = sql.Column(sql.String)
+    username = sql.Column(sql.String)
+    password = sql.Column(sql.String)
+    role = sql.Column(sql.String)
+    created_date = sql.Column(sql.TIMESTAMP)
 
     def __init__(self, name, email, username, password, role):
         self.name = name
@@ -22,15 +22,15 @@ class ManagerSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'email', 'username', 'role', 'created_date')
 
-class Student(db.Model):
+class Student(sql.Model):
     __tablename__ = 'Students'
-    id = db.Column(db.String, primary_key = True)
-    name = db.Column(db.String)
-    password = db.Column(db.String)
-    hometown = db.Column(db.String)
-    nationality = db.Column(db.String)
-    faculty = db.Column(db.String)
-    created_date = db.Column(db.TIMESTAMP)
+    id = sql.Column(sql.String, primary_key = True)
+    name = sql.Column(sql.String)
+    password = sql.Column(sql.String)
+    hometown = sql.Column(sql.String)
+    nationality = sql.Column(sql.String)
+    faculty = sql.Column(sql.String)
+    created_date = sql.Column(sql.TIMESTAMP)
 
     def __init__(self, id, name, password, hometown, nationality, faculty):
         self.id = id
@@ -41,21 +41,21 @@ class Student(db.Model):
         self.faculty = faculty
 
     def insert(self):
-        db.session.add(self)
+        sql.session.add(self)
         try:
-            db.session.commit()
+            sql.session.commit()
             return True
         except Exception:
-            db.session.rollback()
+            sql.session.rollback()
             return False
 
     def delete(self):
-        db.session.delete(self)
+        sql.session.delete(self)
         try:
-            db.session.commit()
+            sql.session.commit()
             return True
         except Exception:
-            db.session.rollback()
+            sql.session.rollback()
             return False
 
 class StudentSchema(ma.Schema):

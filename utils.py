@@ -1,6 +1,6 @@
 from flask import request
 import jwt
-from config import db
+from config import sql
 
 def get_jwt():
     try:
@@ -22,9 +22,9 @@ def return_unauthorized():
     }
 
 def insert_db(obj):
-    db.session.add(obj)
+    sql.session.add(obj)
     try:
-        db.session.commit()
+        sql.session.commit()
     except Exception:
-        db.session.rollback()
+        sql.session.rollback()
         raise
