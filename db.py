@@ -40,24 +40,6 @@ class Student(sql.Model):
         self.nationality = nationality
         self.faculty = faculty
 
-    def insert(self):
-        sql.session.add(self)
-        try:
-            sql.session.commit()
-            return True
-        except Exception:
-            sql.session.rollback()
-            return False
-
-    def delete(self):
-        sql.session.delete(self)
-        try:
-            sql.session.commit()
-            return True
-        except Exception:
-            sql.session.rollback()
-            return False
-
 class StudentSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'hometown', 'nationality', 'faculty', 'created_date')

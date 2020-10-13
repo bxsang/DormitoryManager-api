@@ -21,10 +21,24 @@ def return_unauthorized():
         'message': 'Ban ko co quyen thuc hien hanh dong nay'
     }
 
-def insert_db(obj):
-    sql.session.add(obj)
-    try:
-        sql.session.commit()
-    except Exception:
-        sql.session.rollback()
-        raise
+def db_insert(data):
+    if data and len(data) > 0:
+        for item in data:
+            sql.session.add(item)
+        try:
+            sql.session.commit()
+            return True
+        except Exception:
+            sql.session.rollback()
+            return False
+
+def db_delete(data):
+    if data and len(data) > 0:
+        for item in data:
+            sql.session.delete(item)
+        try:
+            sql.session.commit()
+            return True
+        except Exception:
+            sql.session.rollback()
+            return False
