@@ -70,6 +70,7 @@ class RoomArrangements(sql.Model):
     room_name = sql.Column(sql.String, sql.ForeignKey('Rooms.name'))
     assigned_time = sql.Column(sql.TIMESTAMP)
     assigned_employee = sql.Column(sql.Integer, sql.ForeignKey('Employees.id'))
+    semeter = sql.relationship('Semeters', backref='arrangements', lazy='joined')
 
 class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -98,7 +99,8 @@ class BuildingSchema(ma.SQLAlchemySchema):
         model = Building
     
     name = ma.auto_field()
-    rooms = ma.auto_field()
+    # rooms = ma.auto_field()
+    rooms = ma.Nested('RoomsSchema', many=True)
 
 class RoomsSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -108,12 +110,14 @@ class RoomsSchema(ma.SQLAlchemySchema):
     name = ma.auto_field()
     capacity = ma.auto_field()
     building_name = ma.auto_field()
+    # building = ma.Nested('BuildingSchema')
 
 class SemetersSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Semeters
     
     name = ma.auto_field()
+    arrangements = ma.Nested('RoomArrangementsSchema', many=True)
 
 class RoomArrangementsSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
