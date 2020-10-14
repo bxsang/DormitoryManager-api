@@ -1,4 +1,6 @@
 import hashlib
+
+from flask_sqlalchemy import model
 from config import sql, ma
 
 class Manager(sql.Model):
@@ -62,6 +64,15 @@ class Semeters(sql.Model):
     def __init__(self, name):
         self.name = name
 
+class RoomArrangements(sql.Model):
+    __tablename__ = 'RoomArrangements'
+    id = id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
+    semeter_name = sql.Column(sql.String, sql.ForeignKey('Semeters.name'))
+    student_id = sql.Column(sql.String, sql.ForeignKey('Student.id'))
+    room_name = sql.Column(sql.String, sql.ForeignKey('Rooms.name'))
+    assigned_time = sql.Column(sql.TIMESTAMP)
+    assigned_employee = sql.Column(sql.Integer, sql.ForeignKey('Employees.id'))
+
 class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Manager
@@ -105,3 +116,14 @@ class SemetersSchema(ma.SQLAlchemyAutoSchema):
         model = Semeters
     
     name = ma.auto_field()
+
+class RoomArrangementsSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = RoomArrangements
+    
+    id = ma.auto_field()
+    semeter_name = ma.auto_field()
+    student_id = ma.auto_field()
+    room_name = ma.auto_field()
+    assigned_time = ma.auto_field()
+    assigned_employee = ma.auto_field()
