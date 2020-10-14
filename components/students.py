@@ -6,7 +6,7 @@ import jwt
 import utils
 
 class Students(Resource):
-    def get(self):
+    def get(self, semeter_name):
         try:
             jwt = utils.get_jwt()
             role = jwt['role']
@@ -15,6 +15,12 @@ class Students(Resource):
         required_roles = ['manager', 'admin']
         if role not in required_roles:
             return utils.return_unauthorized()
+        # if semeter_name:
+        #     semeter = db.Semeters.query \
+        #         .filter(db.Semeters.name == semeter_name) \
+        #         .one_or_none()
+        #     semeter_schema = db.SemetersSchema()
+        #     students = semeter_schema.dump(semeter_schema)
         students = db.Student.query.all()
         students_schema = db.StudentSchema(many=True)
         return students_schema.dump(students)

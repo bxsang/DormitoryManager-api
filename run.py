@@ -20,7 +20,7 @@ api.add_resource(Rooms, '/rooms')
 api.add_resource(Room, '/rooms/<room_name>')
 api.add_resource(Semeters, '/semeters')
 api.add_resource(Semeter, '/semeters/<semeter_name>')
-api.add_resource(Arrangements, '/arrangements')
+api.add_resource(Arrangements, '/semeters/<semeter_name>/arrangements')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

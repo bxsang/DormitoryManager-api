@@ -4,7 +4,7 @@ from flask_restful import Resource
 import utils
 
 class Arrangements(Resource):
-    def get(self):
+    def get(self, semeter_name):
         try:
             jwt = utils.get_jwt()
             role = jwt['role']
@@ -13,6 +13,8 @@ class Arrangements(Resource):
         required_roles = ['manager', 'admin']
         if role not in required_roles:
             return utils.return_unauthorized()
-        arrangements = db.RoomArrangements.query.all()
-        arrangements_schema = db.RoomArrangementsSchema(many=True)
-        return arrangements_schema.dump(arrangements)
+        semeter = db.Semeters.query \
+            .filter(db.Semeters.name == semeter_name) \
+            .one_or_none()
+        semeter_schema = db.SemetersSchema()
+        return semeter_schema.dump(semeter)['arrangements']
