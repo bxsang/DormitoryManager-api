@@ -1,6 +1,6 @@
 from config import app, api
 from components.managers import Managers, Manager, ManagerLogin
-from components.students import Students, Student, StudentLogin
+from components.students import Students, Student, StudentLogin, StudentArrangements
 from components.current_users import CurrentUser
 from components.building import Buildings, Building
 from components.rooms import Rooms, Room
@@ -12,6 +12,7 @@ api.add_resource(Manager, '/managers/<manager_id>')
 api.add_resource(ManagerLogin, '/managers/login')
 api.add_resource(Students, '/students')
 api.add_resource(Student, '/students/<student_id>')
+api.add_resource(StudentArrangements, '/students/<student_id>/arrangements')
 api.add_resource(StudentLogin, '/students/login')
 api.add_resource(CurrentUser, '/me')
 api.add_resource(Buildings, '/buildings')

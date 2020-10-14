@@ -6,7 +6,7 @@ import jwt
 import utils
 
 class Students(Resource):
-    def get(self, semeter_name):
+    def get(self):
         try:
             jwt = utils.get_jwt()
             role = jwt['role']
@@ -15,12 +15,6 @@ class Students(Resource):
         required_roles = ['manager', 'admin']
         if role not in required_roles:
             return utils.return_unauthorized()
-        # if semeter_name:
-        #     semeter = db.Semeters.query \
-        #         .filter(db.Semeters.name == semeter_name) \
-        #         .one_or_none()
-        #     semeter_schema = db.SemetersSchema()
-        #     students = semeter_schema.dump(semeter_schema)
         students = db.Student.query.all()
         students_schema = db.StudentSchema(many=True)
         return students_schema.dump(students)
@@ -171,3 +165,19 @@ class StudentLogin(Resource):
             },
             'token': encoded_jwt.decode('utf-8')
         }
+
+class StudentArrangements(Resource):
+    def get(self, student_id):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin', 'student']
+        if role not in required_roles or jwt['role'] != 'admin' and jwt['role'] != 'manager' and jwt['id'] != student_id:
+            return utils.return_unauthorized()
+        student = db.Student.query \
+            .filter(db.Student.id == student_id) \
+            .one_or_none()
+        student_schema = db.StudentSchema()
+        return student_schema.dump(student)['arrangements']

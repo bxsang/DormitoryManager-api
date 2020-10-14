@@ -66,11 +66,12 @@ class RoomArrangements(sql.Model):
     __tablename__ = 'RoomArrangements'
     id = id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
     semeter_name = sql.Column(sql.String, sql.ForeignKey('Semeters.name'))
-    student_id = sql.Column(sql.String, sql.ForeignKey('Student.id'))
+    student_id = sql.Column(sql.String, sql.ForeignKey('Students.id'))
     room_name = sql.Column(sql.String, sql.ForeignKey('Rooms.name'))
     assigned_time = sql.Column(sql.TIMESTAMP)
     assigned_employee = sql.Column(sql.Integer, sql.ForeignKey('Employees.id'))
     semeter = sql.relationship('Semeters', backref='arrangements', lazy='joined')
+    student = sql.relationship('Student', backref='arrangements', lazy='joined')
 
 class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -93,6 +94,7 @@ class StudentSchema(ma.SQLAlchemySchema):
     nationality = ma.auto_field()
     faculty = ma.auto_field()
     created_date = ma.auto_field()
+    arrangements = ma.Nested('RoomArrangementsSchema', many=True)
 
 class BuildingSchema(ma.SQLAlchemySchema):
     class Meta:
