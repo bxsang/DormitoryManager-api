@@ -1,6 +1,4 @@
 import hashlib
-
-from flask_sqlalchemy import model
 from config import sql, ma
 
 class Manager(sql.Model):
