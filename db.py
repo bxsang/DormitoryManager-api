@@ -55,6 +55,13 @@ class Rooms(sql.Model):
         self.capacity = capacity
         self.building_name = building_name
 
+class Semeters(sql.Model):
+    __tablename__ = 'Semeters'
+    name = sql.Column(sql.String, primary_key = True)
+
+    def __init__(self, name):
+        self.name = name
+
 class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Manager
@@ -92,3 +99,9 @@ class RoomsSchema(ma.SQLAlchemySchema):
     name = ma.auto_field()
     capacity = ma.auto_field()
     building_name = ma.auto_field()
+
+class SemetersSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Semeters
+    
+    name = ma.auto_field()

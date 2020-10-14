@@ -4,6 +4,7 @@ from components.students import Students, Student, StudentLogin
 from components.current_users import CurrentUser
 from components.building import Buildings, Building
 from components.rooms import Rooms, Room
+from components.semeters import Semeters, Semeter
 
 api.add_resource(Managers, '/managers')
 api.add_resource(Manager, '/managers/<manager_id>')
@@ -16,6 +17,8 @@ api.add_resource(Buildings, '/buildings')
 api.add_resource(Building, '/buildings/<building_name>')
 api.add_resource(Rooms, '/rooms')
 api.add_resource(Room, '/rooms/<room_name>')
+api.add_resource(Semeters, '/semeters')
+api.add_resource(Semeter, '/semeters/<semeter_name>')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
