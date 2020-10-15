@@ -97,3 +97,19 @@ class Building(Resource):
             'success': False,
             'message': 'Toà nhà không tồn tại'
         }
+
+class BuildingRooms(Resource):
+    def get(self, building_name):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        building = db.Building.query \
+            .filter(db.Building.name == building_name) \
+            .one_or_none()
+        building_schema = db.BuildingSchema()
+        return building_schema.dump(building)['rooms']
