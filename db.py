@@ -18,10 +18,6 @@ class Manager(sql.Model):
         self.password = hashlib.md5(password).hexdigest()
         self.role = role
 
-class ManagerSchema(ma.Schema):
-    class Meta:
-        fields = ('id', 'name', 'email', 'username', 'role', 'created_date')
-
 class Student(sql.Model):
     __tablename__ = 'Students'
     id = sql.Column(sql.String, primary_key = True)
@@ -40,6 +36,104 @@ class Student(sql.Model):
         self.nationality = nationality
         self.faculty = faculty
 
-class StudentSchema(ma.Schema):
+class Building(sql.Model):
+    __tablename__ = 'Building'
+    name = sql.Column(sql.String, primary_key = True)
+
+    def __init__(self, name):
+        self.name = name
+
+class Rooms(sql.Model):
+    __tablename__ = 'Rooms'
+    name = sql.Column(sql.String, primary_key = True)
+    capacity = sql.Column(sql.Integer)
+    building_name = sql.Column(sql.String, sql.ForeignKey('Building.name'))
+    building = sql.relationship('Building', backref='rooms', lazy='joined')
+
+    def __init__(self, name, capacity, building_name):
+        self.name = name
+        self.capacity = capacity
+        self.building_name = building_name
+
+class Semeters(sql.Model):
+    __tablename__ = 'Semeters'
+    name = sql.Column(sql.String, primary_key = True)
+
+    def __init__(self, name):
+        self.name = name
+
+class RoomArrangements(sql.Model):
+    __tablename__ = 'RoomArrangements'
+    id = id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
+    semeter_name = sql.Column(sql.String, sql.ForeignKey('Semeters.name'))
+    student_id = sql.Column(sql.String, sql.ForeignKey('Students.id'))
+    room_name = sql.Column(sql.String, sql.ForeignKey('Rooms.name'))
+    assigned_time = sql.Column(sql.TIMESTAMP)
+    assigned_employee = sql.Column(sql.Integer, sql.ForeignKey('Employees.id'))
+    semeter = sql.relationship('Semeters', backref='arrangements', lazy='joined')
+    student = sql.relationship('Student', backref='arrangements', lazy='joined')
+
+    def __init__(self, semeter_name, student_id, room_name, assigned_employee):
+        self.semeter_name = semeter_name
+        self.student_id = student_id
+        self.room_name = room_name
+        self.assigned_employee = assigned_employee
+
+class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
-        fields = ('id', 'name', 'hometown', 'nationality', 'faculty', 'created_date')
+        model = Manager
+    
+    id = ma.auto_field()
+    name = ma.auto_field()
+    email = ma.auto_field()
+    username = ma.auto_field()
+    role = ma.auto_field()
+    created_date = ma.auto_field()
+
+class StudentSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Student
+    
+    id = ma.auto_field()
+    name = ma.auto_field()
+    hometown = ma.auto_field()
+    nationality = ma.auto_field()
+    faculty = ma.auto_field()
+    created_date = ma.auto_field()
+    arrangements = ma.Nested('RoomArrangementsSchema', many=True)
+
+class BuildingSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Building
+    
+    name = ma.auto_field()
+    # rooms = ma.auto_field()
+    rooms = ma.Nested('RoomsSchema', many=True)
+
+class RoomsSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Rooms
+        include_fk = True
+    
+    name = ma.auto_field()
+    capacity = ma.auto_field()
+    building_name = ma.auto_field()
+    # building = ma.Nested('BuildingSchema', many=True)
+
+class SemetersSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Semeters
+    
+    name = ma.auto_field()
+    arrangements = ma.Nested('RoomArrangementsSchema', many=True)
+
+class RoomArrangementsSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = RoomArrangements
+    
+    id = ma.auto_field()
+    semeter_name = ma.auto_field()
+    student_id = ma.auto_field()
+    room_name = ma.auto_field()
+    assigned_time = ma.auto_field()
+    assigned_employee = ma.auto_field()

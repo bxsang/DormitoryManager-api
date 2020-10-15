@@ -165,3 +165,19 @@ class StudentLogin(Resource):
             },
             'token': encoded_jwt.decode('utf-8')
         }
+
+class StudentArrangements(Resource):
+    def get(self, student_id):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin', 'student']
+        if role not in required_roles or jwt['role'] != 'admin' and jwt['role'] != 'manager' and jwt['id'] != student_id:
+            return utils.return_unauthorized()
+        student = db.Student.query \
+            .filter(db.Student.id == student_id) \
+            .one_or_none()
+        student_schema = db.StudentSchema()
+        return student_schema.dump(student)['arrangements']
