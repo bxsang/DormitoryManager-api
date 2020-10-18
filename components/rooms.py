@@ -98,3 +98,19 @@ class Room(Resource):
             'success': False,
             'message': 'Toà nhà không tồn tại'
         }
+
+class RoomArrangements(Resource):
+    def get(self, room_name):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        room = db.Rooms.query \
+            .filter(db.Rooms.name == room_name) \
+            .one_or_none()
+        room_schema = db.RoomsSchema()
+        return room_schema.dump(room)['arrangements']

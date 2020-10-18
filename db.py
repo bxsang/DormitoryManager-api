@@ -72,6 +72,7 @@ class RoomArrangements(sql.Model):
     assigned_employee = sql.Column(sql.Integer, sql.ForeignKey('Employees.id'))
     semeter = sql.relationship('Semeters', backref='arrangements', lazy='joined')
     student = sql.relationship('Student', backref='arrangements', lazy='joined')
+    room = sql.relationship('Rooms', backref='arrangements', lazy='joined')
 
     def __init__(self, semeter_name, student_id, room_name, assigned_employee):
         self.semeter_name = semeter_name
@@ -119,6 +120,7 @@ class RoomsSchema(ma.SQLAlchemySchema):
     capacity = ma.auto_field()
     building_name = ma.auto_field()
     # building = ma.Nested('BuildingSchema', many=True)
+    arrangements = ma.Nested('RoomArrangementsSchema', many=True)
 
 class SemetersSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
