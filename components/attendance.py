@@ -6,7 +6,6 @@ import utils
 class Attendance(Resource):
     def get(self, date):
         try:
-            data = request.get_json()
             jwt = utils.get_jwt()
             role = jwt['role']
         except Exception:
@@ -16,8 +15,6 @@ class Attendance(Resource):
             return utils.return_unauthorized()
         attendance = db.Attendance.query \
             .filter(db.Attendance.date == date) \
-            .filter(db.RoomArrangements.semeter_name == data['semeter_name']) \
-            .filter(db.RoomArrangements.room_name == data['room_name']) \
             .all()
         attendance_schema = db.AttendanceSchema(many=True)
         return attendance_schema.dump(attendance)
