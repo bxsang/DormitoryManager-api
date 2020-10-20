@@ -114,3 +114,24 @@ class RoomArrangements(Resource):
             .one_or_none()
         room_schema = db.RoomsSchema()
         return room_schema.dump(room)['arrangements']
+
+class RoomArrangementsBySemeter(Resource):
+    def get(self, room_name, semeter_name):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        room = db.Rooms.query \
+            .filter(db.Rooms.name == room_name) \
+            .one_or_none()
+        room_schema = db.RoomsSchema()
+        result = []
+        arrangements = room_schema.dump(room)['arrangements']
+        for arrangement in arrangements:
+            if arrangement['semeter_name'] == semeter_name:
+                result.append(arrangement)
+        return result

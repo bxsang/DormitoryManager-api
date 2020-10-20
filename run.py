@@ -3,7 +3,7 @@ from components.managers import Managers, Manager, ManagerLogin
 from components.students import Students, Student, StudentLogin, StudentArrangements
 from components.current_users import CurrentUser
 from components.building import Buildings, Building, BuildingRooms
-from components.rooms import Rooms, Room, RoomArrangements
+from components.rooms import Rooms, Room, RoomArrangements, RoomArrangementsBySemeter
 from components.semeters import Semeters, Semeter
 from components.arrangements import Arrangements
 
@@ -21,6 +21,7 @@ api.add_resource(BuildingRooms, '/buildings/<building_name>/rooms')
 api.add_resource(Rooms, '/rooms')
 api.add_resource(Room, '/rooms/<room_name>')
 api.add_resource(RoomArrangements, '/rooms/<room_name>/arrangements')
+api.add_resource(RoomArrangementsBySemeter, '/rooms/<room_name>/arrangements/<semeter_name>')
 api.add_resource(Semeters, '/semeters')
 api.add_resource(Semeter, '/semeters/<semeter_name>')
 api.add_resource(Arrangements, '/semeters/<semeter_name>/arrangements')
