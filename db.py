@@ -80,6 +80,18 @@ class RoomArrangements(sql.Model):
         self.room_name = room_name
         self.assigned_employee = assigned_employee
 
+class Attendance(sql.Model):
+    __tablename__ = 'Attendance'
+    date = sql.Column(sql.Date, primary_key=True)
+    status = sql.Column(sql.Boolean, primary_key=True)
+    student_id = sql.Column(sql.String, sql.ForeignKey('Students.id'), primary_key=True)
+    student = sql.relationship('Student', backref='attendance', lazy='joined')
+
+    def __init__(self, date, status, student_id):
+        self.date = date
+        self.status = status
+        self.student_id = student_id
+
 class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Manager
@@ -139,3 +151,12 @@ class RoomArrangementsSchema(ma.SQLAlchemyAutoSchema):
     room_name = ma.auto_field()
     assigned_time = ma.auto_field()
     assigned_employee = ma.auto_field()
+
+class AttendanceSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Attendance
+    
+    date = ma.auto_field
+    status = ma.auto_field
+    student_id = ma.auto_field
+    student = ma.Nested('StudentSchema')
