@@ -59,6 +59,7 @@ class Student(Resource):
         return student_schema.dump(student)
     
     def post(self, student_id):
+        default_password = 'p@ssw0rd'
         try:
             data = request.get_json()
             jwt = utils.get_jwt()
@@ -76,7 +77,7 @@ class Student(Resource):
                 'success': False,
                 'message': 'Sinh viên đã tồn tại'
             }
-        student = db.Student(student_id, data['name'], data['password'], data['hometown'], data['nationality'], data['faculty'])
+        student = db.Student(student_id, data['name'], default_password, data['hometown'], data['nationality'], data['faculty'])
         return {
             'success': utils.db_insert([student])
         }
