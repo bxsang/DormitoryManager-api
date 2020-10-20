@@ -41,3 +41,50 @@ class Attendance(Resource):
         return {
             'success': utils.db_insert(attendance_to_add)
         }
+
+    def put(self, date):
+        try:
+            data = request.get_json()
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        attendance_to_update = []
+        for attendance in data:
+            try_attendance = db.Attendance.query \
+                .filter(db.Attendance.student_id == attendance['student_id']) \
+                .filter(db.Attendance.date == date) \
+                .first()
+            if try_attendance is not None:
+                try_attendance.date = date
+                try_attendance.student_id = attendance['student_id']
+                try_attendance.status = attendance['status']
+                attendance_to_update.append(try_attendance)
+        return {
+            'success': utils.db_insert(attendance_to_update)
+        }
+
+    def delete(self, date):
+        try:
+            data = request.get_json()
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        attendance_to_delete = []
+        for attendance in data:
+            try_attendance = db.Attendance.query \
+                .filter(db.Attendance.student_id == attendance['student_id']) \
+                .filter(db.Attendance.date == date) \
+                .first()
+            if try_attendance is not None:
+                attendance_to_delete.append(try_attendance)
+        return {
+            'success': utils.db_delete(attendance_to_delete)
+        }
