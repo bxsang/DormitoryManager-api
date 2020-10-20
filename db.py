@@ -156,7 +156,7 @@ class AttendanceSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Attendance
     
-    date = ma.auto_field
-    status = ma.auto_field
-    student_id = ma.auto_field
+    date = ma.auto_field()
+    status = ma.auto_field()
+    student_id = ma.auto_field()
     student = ma.Nested('StudentSchema')
