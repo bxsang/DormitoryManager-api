@@ -33,3 +33,25 @@ class Violations(Resource):
         return {
             'success': utils.db_insert(violations_to_add)
         }
+
+class Violation(Resource):
+    def delete(self, violation_id):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        violation = db.Violations.query \
+            .filter(db.Violations.id == violation_id) \
+            .first()
+        if violation is not None:
+            return {
+                'success': utils.db_delete([violation])
+            }
+        return {
+            'success': False,
+            'message': 'Lỗi không tồn tại'
+        }
