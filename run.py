@@ -7,6 +7,7 @@ from components.rooms import Rooms, Room, RoomArrangements, RoomArrangementsBySe
 from components.semeters import Semeters, Semeter
 from components.arrangements import Arrangements
 from components.attendance import Attendance
+from components.violations import Violations
 
 api.add_resource(Managers, '/managers')
 api.add_resource(Manager, '/managers/<manager_id>')
@@ -27,6 +28,7 @@ api.add_resource(Semeters, '/semeters')
 api.add_resource(Semeter, '/semeters/<semeter_name>')
 api.add_resource(Arrangements, '/semeters/<semeter_name>/arrangements')
 api.add_resource(Attendance, '/attendance/<date>')
+api.add_resource(Violations, '/violations')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

@@ -92,6 +92,20 @@ class Attendance(sql.Model):
         self.status = status
         self.student_id = student_id
 
+class Violations(sql.Model):
+    __tablename__ = 'Violations'
+    id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
+    student_id = sql.Column(sql.String, sql.ForeignKey('Students.id'))
+    semeter_name = sql.Column(sql.String, sql.ForeignKey('Semeters.name'))
+    employee_id = sql.Column(sql.Integer, sql.ForeignKey('Employees.id'))
+    message = sql.Column(sql.String)
+
+    def __init__(self, student_id, semeter_name, employee_id, message):
+        self.student_id = student_id
+        self.semeter_name = semeter_name
+        self.employee_id = employee_id
+        self.message = message
+
 class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Manager
@@ -160,3 +174,13 @@ class AttendanceSchema(ma.SQLAlchemyAutoSchema):
     status = ma.auto_field()
     student_id = ma.auto_field()
     student = ma.Nested('StudentSchema')
+
+class ViolationsSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Violations
+    
+    id = ma.auto_field()
+    student_id = ma.auto_field()
+    semeter_name = ma.auto_field()
+    employee_id = ma.auto_field()
+    message = ma.auto_field()
