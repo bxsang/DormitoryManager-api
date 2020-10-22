@@ -115,7 +115,7 @@ class DotThuTien(sql.Model):
     date_created = sql.Column(sql.Date)
     semeter_name = sql.Column(sql.String, sql.ForeignKey('Semeters.name'))
 
-    def init(self, name, date_created, semeter_name):
+    def __init__(self, name, date_created, semeter_name):
         self.name = name
         self.date_created = date_created
         self.semeter_name = semeter_name
@@ -125,7 +125,7 @@ class GiaDienNuoc(sql.Model):
     dien = sql.Column(sql.Float, primary_key = True)
     nuoc = sql.Column(sql.Float, primary_key = True)
 
-    def init(self, dien, nuoc):
+    def __init__(self, dien, nuoc):
         self.dien = dien
         self.nuoc = nuoc
 
@@ -139,6 +139,14 @@ class DienNuoc(sql.Model):
     electricity = sql.Column(sql.Integer)
     dot_id = sql.Column(sql.Integer, sql.ForeignKey('DotThuTien.id'))
 
+    def __init__(self, room_name, date, semeter_name, water, electricity, dot_id):
+        self.room_name = room_name
+        self.date = date
+        self.semeter_name = semeter_name
+        self.water = water
+        self.electricity = electricity
+        self.dot_id = dot_id
+
 class NopTien(sql.Model):
     __tablename__ = 'NopTien'
     id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
@@ -146,6 +154,12 @@ class NopTien(sql.Model):
     so_tien = sql.Column(sql.Float)
     trang_thai = sql.Column(sql.Boolean)
     dot_id = sql.Column(sql.Integer, sql.ForeignKey('DotThuTien.id'))
+
+    def __init__(self, student_id, so_tien, trang_thai, dot_id):
+        self.student_id = student_id
+        self.so_tien = so_tien
+        self.trang_thai = trang_thai
+        self.dot_id = dot_id
 
 class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
