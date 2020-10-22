@@ -9,6 +9,7 @@ from components.arrangements import Arrangements
 from components.attendance import Attendance
 from components.violations import Violations, Violation
 from components.dot_thu import DotThu, DotThu2
+from components.dien_nuoc import DienNuoc, DienNuoc2
 
 api.add_resource(Managers, '/managers')
 api.add_resource(Manager, '/managers/<manager_id>')
@@ -33,6 +34,8 @@ api.add_resource(Violations, '/violations')
 api.add_resource(Violation, '/violations/<violation_id>')
 api.add_resource(DotThu, '/dot_thu')
 api.add_resource(DotThu2, '/dot_thu/<dot_id>')
+api.add_resource(DienNuoc, '/dien_nuoc')
+api.add_resource(DienNuoc2, '/dien_nuoc/<dn_id>')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
