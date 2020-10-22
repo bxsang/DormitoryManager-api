@@ -247,7 +247,7 @@ class DotThuTienSchema(ma.SQLAlchemyAutoSchema):
     id = ma.auto_field()
     name = ma.auto_field()
     date_created = ma.auto_field()
-    date_created = ma.auto_field()
+    semeter_name = ma.auto_field()
 
 class GiaDienNuocSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
