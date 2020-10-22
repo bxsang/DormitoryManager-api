@@ -115,7 +115,8 @@ class DotThuTien(sql.Model):
     date_created = sql.Column(sql.Date)
     semeter_name = sql.Column(sql.String, sql.ForeignKey('Semeters.name'))
 
-    def __init__(self, name, date_created, semeter_name):
+    def __init__(self, id, name, date_created, semeter_name):
+        self.id = id
         self.name = name
         self.date_created = date_created
         self.semeter_name = semeter_name
@@ -139,7 +140,8 @@ class DienNuoc(sql.Model):
     electricity = sql.Column(sql.Integer)
     dot_id = sql.Column(sql.Integer, sql.ForeignKey('DotThuTien.id'))
 
-    def __init__(self, room_name, date, semeter_name, water, electricity, dot_id):
+    def __init__(self, id, room_name, date, semeter_name, water, electricity, dot_id):
+        self.id = id
         self.room_name = room_name
         self.date = date
         self.semeter_name = semeter_name
