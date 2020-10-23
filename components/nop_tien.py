@@ -47,3 +47,25 @@ class NopTien(Resource):
             return {
                 'success': False
             }
+
+class NopTien2(Resource):
+    def delete(self, id):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        nt = db.NopTien.query \
+            .filter(db.NopTien.id == id) \
+            .first()
+        if nt is not None:
+            return {
+                'success': utils.db_delete([nt])
+            }
+        return {
+            'success': False,
+            'message': 'Không tồn tại'
+        }

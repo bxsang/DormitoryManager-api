@@ -10,7 +10,7 @@ from components.attendance import Attendance
 from components.violations import Violations, Violation
 from components.dot_thu import DotThu, DotThu2
 from components.dien_nuoc import DienNuoc, DienNuoc2, TinhTienDN
-from components.nop_tien import NopTien
+from components.nop_tien import NopTien, NopTien2
 
 api.add_resource(Managers, '/managers')
 api.add_resource(Manager, '/managers/<manager_id>')
@@ -39,6 +39,7 @@ api.add_resource(DienNuoc, '/dien_nuoc')
 api.add_resource(DienNuoc2, '/dien_nuoc/<dn_id>')
 api.add_resource(TinhTienDN, '/dien_nuoc/tinh_tien')
 api.add_resource(NopTien, '/nop_tien')
+api.add_resource(NopTien2, '/nop_tien/<id>')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
