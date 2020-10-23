@@ -2,7 +2,6 @@ import db
 from flask import request
 from flask_restful import Resource
 import utils
-from datetime import date
 
 class NopTienList(Resource):
     def get(self):
