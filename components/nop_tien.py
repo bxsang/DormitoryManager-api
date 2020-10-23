@@ -34,19 +34,13 @@ class NopTien(Resource):
                 .filter(db.NopTien.dot_id == d['dot_id']) \
                 .first()
             if nt is not None:
-                nt.trang_thai = 1
+                nt.trang_thai = d['trang_thai']
                 data_to_add.append(nt)
-        try:
-            for nt in data_to_add:
-                nt.trang_thai = 1
-                utils.db_insert([nt])
-            return {
-                'success': True
-            }
-        except Exception:
-            return {
-                'success': False
-            }
+            else:
+                data_to_add.append(db.NopTien(d['student_id'], d['so_tien'], d['trang_thai'], d['dot_id']))
+        return {
+            'success': utils.db_insert(data_to_add)
+        }
 
 class NopTien2(Resource):
     def delete(self, id):
