@@ -1,4 +1,6 @@
 import hashlib
+
+from flask_sqlalchemy import model
 from config import sql, ma
 
 class Manager(sql.Model):
@@ -106,6 +108,61 @@ class Violations(sql.Model):
         self.employee_id = employee_id
         self.message = message
 
+class DotThuTien(sql.Model):
+    __tablename__ = 'DotThuTien'
+    id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
+    name = sql.Column(sql.String)
+    date_created = sql.Column(sql.Date)
+    semeter_name = sql.Column(sql.String, sql.ForeignKey('Semeters.name'))
+
+    def __init__(self, id, name, date_created, semeter_name):
+        self.id = id
+        self.name = name
+        self.date_created = date_created
+        self.semeter_name = semeter_name
+
+class GiaDienNuoc(sql.Model):
+    __tablename__ = 'GiaDienNuoc'
+    dien = sql.Column(sql.Float, primary_key = True)
+    nuoc = sql.Column(sql.Float, primary_key = True)
+
+    def __init__(self, dien, nuoc):
+        self.dien = dien
+        self.nuoc = nuoc
+
+class DienNuoc(sql.Model):
+    __tablename__ = 'DienNuoc'
+    id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
+    room_name = sql.Column(sql.String, sql.ForeignKey('Rooms.name'))
+    date = sql.Column(sql.Date)
+    semeter_name = sql.Column(sql.String, sql.ForeignKey('Semeters.name'))
+    water = sql.Column(sql.Integer)
+    electricity = sql.Column(sql.Integer)
+    dot_id = sql.Column(sql.Integer, sql.ForeignKey('DotThuTien.id'))
+
+    def __init__(self, id, room_name, date, semeter_name, water, electricity, dot_id):
+        self.id = id
+        self.room_name = room_name
+        self.date = date
+        self.semeter_name = semeter_name
+        self.water = water
+        self.electricity = electricity
+        self.dot_id = dot_id
+
+class NopTien(sql.Model):
+    __tablename__ = 'NopTien'
+    id = sql.Column(sql.Integer, primary_key = True, autoincrement=True)
+    student_id = sql.Column(sql.String, sql.ForeignKey('Students.id'))
+    so_tien = sql.Column(sql.Float)
+    trang_thai = sql.Column(sql.Boolean)
+    dot_id = sql.Column(sql.Integer, sql.ForeignKey('DotThuTien.id'))
+
+    def __init__(self, student_id, so_tien, trang_thai, dot_id):
+        self.student_id = student_id
+        self.so_tien = so_tien
+        self.trang_thai = trang_thai
+        self.dot_id = dot_id
+
 class ManagerSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Manager
@@ -184,3 +241,41 @@ class ViolationsSchema(ma.SQLAlchemyAutoSchema):
     semeter_name = ma.auto_field()
     employee_id = ma.auto_field()
     message = ma.auto_field()
+
+class DotThuTienSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = DotThuTien
+    
+    id = ma.auto_field()
+    name = ma.auto_field()
+    date_created = ma.auto_field()
+    semeter_name = ma.auto_field()
+
+class GiaDienNuocSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = GiaDienNuoc
+    
+    dien = ma.auto_field()
+    nuoc = ma.auto_field()
+
+class DienNuocSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = DienNuoc
+    
+    id = ma.auto_field()
+    room_name = ma.auto_field()
+    date = ma.auto_field()
+    semeter_name = ma.auto_field()
+    water = ma.auto_field()
+    electricity = ma.auto_field()
+    dot_id = ma.auto_field()
+
+class NopTienSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = NopTien
+    
+    id = ma.auto_field()
+    student_id = ma.auto_field()
+    so_tien = ma.auto_field()
+    trang_thai = ma.auto_field()
+    dot_id = ma.auto_field()
