@@ -3,7 +3,7 @@ from flask import request
 from flask_restful import Resource
 import utils
 
-class NopTienList(Resource):
+class NopTien(Resource):
     def get(self):
         try:
             jwt = utils.get_jwt()
@@ -17,8 +17,7 @@ class NopTienList(Resource):
         nt_schema = db.NopTienSchema(many=True)
         return nt_schema.dump(nt)
 
-class NopTien(Resource):
-    def post(self, student_id):
+    def post(self):
         try:
             data = request.get_json()
             jwt = utils.get_jwt()
@@ -28,16 +27,23 @@ class NopTien(Resource):
         required_roles = ['manager', 'admin']
         if role not in required_roles:
             return utils.return_unauthorized()
-        nt = db.NopTien.query \
-            .filter(db.NopTien.student_id == student_id) \
-            .filter(db.NopTien.dot_id == data['dot_id']) \
-            .first()
-        if nt is not None:
-            nt.trang_thai = 1
+        data_to_add = []
+        for d in data:
+            nt = db.NopTien.query \
+                .filter(db.NopTien.student_id == d['student_id']) \
+                .filter(db.NopTien.dot_id == d['dot_id']) \
+                .first()
+            if nt is not None:
+                nt.trang_thai = 1
+                data_to_add.append(nt)
+        try:
+            for nt in data_to_add:
+                nt.trang_thai = 1
+                utils.db_insert([nt])
             return {
-                'success': utils.db_insert([nt])
+                'success': True
             }
-        return {
-            'success': False,
-            'message': 'Không tồn tại'
-        }
+        except Exception:
+            return {
+                'success': False
+            }
