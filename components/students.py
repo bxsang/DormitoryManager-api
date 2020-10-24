@@ -198,3 +198,18 @@ class StudentViolations(Resource):
             .all()
         violations_schema = db.ViolationsSchema(many=True)
         return violations_schema.dump(violations)
+
+class StudentFinance(Resource):
+    def get(self, student_id):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin', 'student']
+        if role not in required_roles or jwt['role'] != 'admin' and jwt['role'] != 'manager' and jwt['id'] != student_id:
+            return utils.return_unauthorized()
+        nt = db.NopTien.query \
+            .filter(db.NopTien.student_id == student_id)
+        nt_schema = db.NopTienSchema(many=True)
+        return nt_schema.dump(nt)
