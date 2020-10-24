@@ -17,7 +17,7 @@ class Manager(sql.Model):
         self.name = name
         self.email = email
         self.username = username
-        self.password = hashlib.md5(password).hexdigest()
+        self.password = hashlib.md5(password.encode()).hexdigest()
         self.role = role
 
 class Student(sql.Model):
