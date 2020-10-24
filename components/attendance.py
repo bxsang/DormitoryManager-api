@@ -3,6 +3,20 @@ from flask import request
 from flask_restful import Resource
 import utils
 
+class Attendances(Resource):
+    def get(self):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        attendances = db.Attendance.query.all()
+        attendance_schema = db.AttendanceSchema(many=True)
+        return attendance_schema.dump(attendances)
+
 class Attendance(Resource):
     def get(self, date):
         try:

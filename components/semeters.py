@@ -5,14 +5,6 @@ import utils
 
 class Semeters(Resource):
     def get(self):
-        try:
-            jwt = utils.get_jwt()
-            role = jwt['role']
-        except Exception:
-            return utils.return_auth_err()
-        required_roles = ['manager', 'admin']
-        if role not in required_roles:
-            return utils.return_unauthorized()
         semeters = db.Semeters.query.all()
         semeters_schema = db.SemetersSchema(many=True)
         return semeters_schema.dump(semeters)

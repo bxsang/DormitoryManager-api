@@ -6,7 +6,7 @@ from components.building import Buildings, Building, BuildingRooms
 from components.rooms import Rooms, Room, RoomArrangements, RoomArrangementsBySemeter
 from components.semeters import Semeters, Semeter
 from components.arrangements import Arrangements
-from components.attendance import Attendance
+from components.attendance import Attendance, Attendances
 from components.violations import Violations, Violation
 from components.dot_thu import DotThu, DotThu2
 from components.dien_nuoc import DienNuoc, DienNuoc2, TinhTienDN
@@ -31,6 +31,7 @@ api.add_resource(Semeters, '/semeters')
 api.add_resource(Semeter, '/semeters/<semeter_name>')
 api.add_resource(Arrangements, '/semeters/<semeter_name>/arrangements')
 api.add_resource(Attendance, '/attendance/<date>')
+api.add_resource(Attendances, '/attendances')
 api.add_resource(Violations, '/violations')
 api.add_resource(Violation, '/violations/<violation_id>')
 api.add_resource(DotThu, '/dot_thu')
