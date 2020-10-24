@@ -182,3 +182,19 @@ class StudentArrangements(Resource):
             .one_or_none()
         student_schema = db.StudentSchema()
         return student_schema.dump(student)['arrangements']
+
+class StudentViolations(Resource):
+    def get(self, student_id):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin', 'student']
+        if role not in required_roles or jwt['role'] != 'admin' and jwt['role'] != 'manager' and jwt['id'] != student_id:
+            return utils.return_unauthorized()
+        violations = db.Violations.query \
+            .filter(db.Violations.student_id == student_id) \
+            .all()
+        violations_schema = db.ViolationsSchema(many=True)
+        return violations_schema.dump(violations)
