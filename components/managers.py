@@ -45,17 +45,17 @@ class Managers(Resource):
         }
 
 class Manager(Resource):
-    def get(self, manager_id):
+    def get(self, username):
         try:
             jwt = utils.get_jwt()
             role = jwt['role']
         except Exception:
             return utils.return_auth_err()
         required_roles = ['manager', 'admin']
-        if role not in required_roles or jwt['role'] != 'admin' and jwt['id'] != manager_id:
+        if role not in required_roles or jwt['role'] != 'admin' and jwt['username'] != username:
             return utils.return_unauthorized()
         manager = db.Manager.query \
-            .filter(db.Manager.id == manager_id) \
+            .filter(db.Manager.username == username) \
             .one_or_none()
         manager_schema = db.ManagerSchema()
         return manager_schema.dump(manager)
@@ -81,6 +81,7 @@ class ManagerLogin(Resource):
         encoded_jwt = jwt.encode(
             {
                 'id': result['id'],
+                'username': result['username'],
                 'role': result['role']
             },
             'secret',

@@ -13,7 +13,7 @@ from components.dien_nuoc import DienNuoc, DienNuoc2, TinhTienDN
 from components.nop_tien import NopTien, NopTien2
 
 api.add_resource(Managers, '/managers')
-api.add_resource(Manager, '/managers/<manager_id>')
+api.add_resource(Manager, '/managers/<username>')
 api.add_resource(ManagerLogin, '/managers/login')
 api.add_resource(Students, '/students')
 api.add_resource(Student, '/students/<student_id>')
