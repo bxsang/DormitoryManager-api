@@ -29,7 +29,7 @@ class Managers(Resource):
             role = jwt['role']
         except Exception:
             return utils.return_auth_err()
-        required_roles = ['manager', 'admin']
+        required_roles = ['admin']
         if role not in required_roles:
             return utils.return_unauthorized()
         managers_to_add = []
