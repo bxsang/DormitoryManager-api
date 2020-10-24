@@ -60,6 +60,77 @@ class Manager(Resource):
         manager_schema = db.ManagerSchema()
         return manager_schema.dump(manager)
 
+    def post(self, username):
+        default_password = 'p@ssw0rd'
+        try:
+            data = request.get_json()
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        try_manager = db.Manager.query \
+                .filter(db.Manager.username == username) \
+                .one_or_none()
+        if try_manager is not None:
+            return {
+                'success': False,
+                'message': 'Nhân viên đã tồn tại'
+            }
+        manager = db.Manager(data['name'], data['email'], username, default_password, 'manager')
+        return {
+            'success': utils.db_insert([manager])
+        }
+
+    def put(self, username):
+        try:
+            data = request.get_json()
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles or jwt['role'] != 'admin' and jwt['role'] != 'manager' and jwt['username'] != username:
+            return utils.return_unauthorized()
+        manager = db.Manager.query \
+            .filter(db.Manager.username == username) \
+            .first()
+        if manager is not None:
+            manager.name = data['name']
+            manager.email = data['email']
+            manager.username = data['username']
+            manager.password = hashlib.md5(data['password'].encode()).hexdigest()
+            return {
+                'success': utils.db_insert([manager])
+            }
+        return {
+            'success': False,
+            'message': 'Nhân viên không tồn tại'
+        }
+
+    def delete(self, username):
+        try:
+            jwt = utils.get_jwt()
+            role = jwt['role']
+        except Exception:
+            return utils.return_auth_err()
+        required_roles = ['manager', 'admin']
+        if role not in required_roles:
+            return utils.return_unauthorized()
+        manager = db.Manager.query \
+            .filter(db.Manager.username == username) \
+            .first()
+        if manager is not None:
+            return {
+                'success': utils.db_delete([manager])
+            }
+        return {
+            'success': False,
+            'message': 'Nhân viên không tồn tại'
+        }
+
 class ManagerLogin(Resource):
     def post(self):
         data = request.get_json()
